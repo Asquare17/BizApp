@@ -177,7 +177,7 @@ class _InputDataState extends State<InputData> {
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
-                      BlacklistingTextInputFormatter(new RegExp('[\\-|\\ ]'))
+                      FilteringTextInputFormatter.deny(new RegExp('[\\-|\\ ]'))
                     ],
                     validator: (val) {
                       if (val.isEmpty) {
@@ -199,7 +199,7 @@ class _InputDataState extends State<InputData> {
                     keyboardType:
                         TextInputType.numberWithOptions(decimal: true),
                     inputFormatters: [
-                      BlacklistingTextInputFormatter(new RegExp('[\\-|\\ ]'))
+                      FilteringTextInputFormatter.deny(new RegExp('[\\-|\\ ]'))
                     ],
                     validator: (val) {
                       if (val.isEmpty) {

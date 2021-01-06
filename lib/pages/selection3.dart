@@ -73,7 +73,7 @@ class _Selection3State extends State<Selection3> {
                         borderRadius: BorderRadius.circular(10.0))),
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
-                  BlacklistingTextInputFormatter(new RegExp('[\\-|\\ ]'))
+                  FilteringTextInputFormatter.deny(new RegExp('[\\-|\\ ]'))
                 ],
                 validator: (val) {
                   if (val == null || val.isEmpty) {
