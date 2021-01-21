@@ -1,51 +1,56 @@
 import 'package:cgpa_calculator/models/Level.dart';
+import 'package:cgpa_calculator/models/Semester.dart';
+import 'package:cgpa_calculator/models/User.dart';
 import 'package:cgpa_calculator/pages/inputdata.dart';
 import 'package:cgpa_calculator/pages/selection4.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Selection3 extends StatefulWidget {
-  final int n;
+  final User user;
   final Map data;
-  Selection3({this.n, this.data});
+  Selection3({this.data, this.user});
   @override
   _Selection3State createState() => _Selection3State();
 }
 
 class _Selection3State extends State<Selection3> {
   final _formkey = GlobalKey<FormState>();
-  var list;
-  var list2;
-  List<Level> _alevel;
-  int n;
+  var levelSequenceList;
+  var semesterSequenceList;
+  List<Level> levels;
 
   List<int> property;
 
-  var textFields2;
+  var levelDropDownFieldList;
 
   @override
   void initState() {
     super.initState();
-    list = List<int>.generate(widget.n, (i) => i);
-    _alevel = widget.data['levels'];
-    textFields2 = List<List<Widget>>()..length = widget.n;
+    levelSequenceList =
+        List<int>.generate(widget.user.currentlevelNumber, (level) => level);
+    levels = widget.user.levels;
+    levelDropDownFieldList = List<List<Widget>>()
+      ..length = widget.user.currentlevelNumber;
   }
 
   @override
   Widget build(BuildContext context) {
-    var textFields = <Widget>[];
-    list = List<int>.generate(widget.n, (i) => i);
-    list.forEach((i) {
-      int b = _alevel[i].property[0];
-      list2 = List<int>.generate(b, (j) => j);
-      textFields2[i] = <Widget>[];
-      textFields.add(Card(
+    MaterialAccentColor primaryColor = Theme.of(context).primaryColor;
+    var semesterDropDownFieldList = <Widget>[];
+
+    levelSequenceList.forEach((level) {
+      int numberofSemesterperLevel = levels[level].numberofSemesters;
+      semesterSequenceList =
+          List<int>.generate(numberofSemesterperLevel, (semester) => semester);
+      levelDropDownFieldList[level] = <Widget>[];
+      semesterDropDownFieldList.add(Card(
         child: Row(
           children: <Widget>[
             Text(
-              '${i + 1}00 Level:',
+              '${levels[level].name} :', //TODO
               style: TextStyle(
-                color: Colors.blueAccent,
+                color: primaryColor,
                 fontSize: 16,
               ),
             ),
@@ -53,14 +58,16 @@ class _Selection3State extends State<Selection3> {
               width: 10,
             ),
             Column(
-              children: textFields2[i],
+              children: levelDropDownFieldList[level],
             ),
           ],
         ),
       ));
 
-      for (int j in list2) {
-        textFields2[i].add(Column(
+      for (int semester in semesterSequenceList) {
+        levels[level].semesters[semester] = Semester();
+        levels[level].semesters[semester].name = "Semester ${semester + 1}";
+        levelDropDownFieldList[level].add(Column(
           children: <Widget>[
             SizedBox(
               height: 3,
@@ -69,13 +76,16 @@ class _Selection3State extends State<Selection3> {
               width: 100,
               child: TextFormField(
                 decoration: InputDecoration.collapsed(
-                    hintText: "Semester ${j + 1}",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0))),
+                  hintText: levels[level].semesters[semester].name,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
                 keyboardType: TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
                   FilteringTextInputFormatter.deny(new RegExp('[\\-|\\ ]'))
                 ],
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 validator: (val) {
                   if (val == null || val.isEmpty) {
                     return 'Enter the number of course';
@@ -88,7 +98,9 @@ class _Selection3State extends State<Selection3> {
                   }
                 },
                 onChanged: (val) {
-                  setState(() => _alevel[i].property[j + 1] = int.parse(val));
+                  setState(() => levels[level]
+                      .semesters[semester]
+                      .numberofCourse = int.parse(val));
                 },
               ),
             ),
@@ -111,19 +123,19 @@ class _Selection3State extends State<Selection3> {
           ),
           Center(
             child: Text('Select the number of course per semesters',
-                style: TextStyle(color: Colors.blueAccent)),
+                style: TextStyle(color: primaryColor)),
           ),
           SizedBox(height: 10),
           Form(
             key: _formkey,
             child: Column(
-              children: textFields,
+              children: semesterDropDownFieldList,
             ),
           ),
           SizedBox(height: 10),
           Center(
             child: Container(
-              color: Colors.blueAccent[700],
+              color: primaryColor[700],
               child: FlatButton.icon(
                 onPressed: () {
                   if (_formkey.currentState.validate()) {

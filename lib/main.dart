@@ -19,7 +19,6 @@ class CupertinoStoreApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       routes: {
-        '/': (context) => Welcome(),
         '/selection': (context) => Selection(),
         '/selection2': (context) => Selection2(),
         '/inputdata': (context) => InputData(),

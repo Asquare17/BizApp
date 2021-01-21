@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class Selection4 extends StatefulWidget {
   final int n;
   final Map data;
+  final User
   Selection4({this.n, this.data});
   @override
   _Selection4State createState() => _Selection4State();
@@ -13,7 +14,7 @@ class Selection4 extends StatefulWidget {
 
 class _Selection4State extends State<Selection4>
     with SingleTickerProviderStateMixin {
-  List<Level> _alevel;
+  List<Level> levels;
   final _formkey = GlobalKey<FormState>();
   ScrollController _scrollController;
   TabController _tabController;
@@ -33,7 +34,7 @@ class _Selection4State extends State<Selection4>
     // TODO: implement initState
     super.initState();
     //TODO list = List<int>.generate(widget.n, (i) => i);
-    _alevel = widget.data['levels'];
+    levels = widget.user.levels;
     list = List<int>.generate(widget.n, (i) => i);
     _ascore = List<List<List<double>>>()..length = widget.n;
     _aname = List<List<List<String>>>()..length = widget.n;

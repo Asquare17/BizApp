@@ -5,7 +5,12 @@ class User {
   String name;
   String email;
   School school;
-  int levelNumber;
-  List<Level> level;
-  User({this.name, this.email, this.level, this.school, this.levelNumber});
+  int currentlevelNumber;
+  List<Level> levels;
+  User(
+      {this.name,
+      this.email,
+      this.levels,
+      this.school,
+      this.currentlevelNumber});
 }

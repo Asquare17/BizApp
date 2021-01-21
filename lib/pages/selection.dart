@@ -31,7 +31,8 @@ class _SelectionState extends State<Selection> {
           centerTitle: true,
           backgroundColor: primaryColor,
         ),
-        body: Center(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
@@ -40,9 +41,10 @@ class _SelectionState extends State<Selection> {
                   key: _formkey,
                   child: TextFormField(
                     controller: guestNameController,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (val) {
                       if (val.isEmpty) {
-                        return 'Enter your name!!';
+                        return 'Name cannot be empty';
                       } else
                         return null;
                     },
@@ -165,7 +167,7 @@ class _SelectionState extends State<Selection> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 50,
               ),
               Center(
                 child: Container(
@@ -177,20 +179,15 @@ class _SelectionState extends State<Selection> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => Selection2(
-                              n: (level * 0.01).toInt(),
-                              data: {
-                                'pointbase': pointbase,
-                                'passmark': passmark,
-                                'level': level,
-                                'name': guestNameController.text,
-                              },
                               user: User(
                                 name: guestNameController.text,
                                 school: School(
                                   pointbase: pointbase,
                                   passmark: passmark,
                                 ),
-                                levelNumber: (level * 0.01).toInt(),
+                                currentlevelNumber: (level * 0.01).toInt(),
+                                levels: List<Level>()
+                                  ..length = (level * 0.01).toInt(),
                               ),
                             ),
                           ),

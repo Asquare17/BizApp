@@ -4,62 +4,69 @@ import 'package:cgpa_calculator/pages/selection3.dart';
 import 'package:flutter/material.dart';
 
 class Selection2 extends StatefulWidget {
-  final int n;
-  final Map data;
   final User user;
-  Selection2({this.n, this.data, this.user});
+  Selection2({this.user});
   @override
   _Selection2State createState() => _Selection2State();
 }
 
 class _Selection2State extends State<Selection2> {
-  var list;
-  List<Level> _alevel;
-  int n;
-  List<int> _selection;
-  List<int> property;
-  List<List<int>> _aproperty;
+  var levelSequenceList;
+  List<Level> levels;
+  int numberofLevels;
+  // List<int> _selection;
+  // List<int> property;
+  // List<List<int>> _aproperty;
   final _formkey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    _selection = new List<int>()..length = widget.n;
-    list = List<int>.generate(widget.n, (i) => i);
-    _alevel = List<Level>()..length = widget.n;
-    _aproperty = List<List<int>>()..length = widget.n;
+    // _selection = new List<int>()..length = widget.n;
+    levelSequenceList =
+        List<int>.generate(widget.user.currentlevelNumber, (level) => level);
+    levels = widget.user.levels;
+    // levels = List<Level>()..length = widget.n;
+    // _aproperty = List<List<int>>()..length = widget.n;
   }
 
   @override
   Widget build(BuildContext context) {
-    n = widget.n;
+    MaterialAccentColor primaryColor = Theme.of(context).primaryColor;
 
-    var textFields = <Widget>[];
-    list.forEach((i) {
-      textFields.add(Card(
+    numberofLevels = widget.user.currentlevelNumber;
+
+    var levelDropDownFieldList = <Widget>[];
+    levelSequenceList.forEach((level) {
+      levels[level] = Level();
+      levels[level].name = '${level + 1}00 Level';
+      levelDropDownFieldList.add(Card(
         child: Row(
           children: <Widget>[
-            Text('${i + 1}00 Level:'),
+            Text('${levels[level].name} :'),
             SizedBox(
               width: 10,
             ),
             Container(
               width: 50,
               child: DropdownButtonFormField<int>(
-                value: _selection[i],
+                value: levels[level].numberofSemesters,
                 icon: Icon(Icons.arrow_drop_down),
                 iconSize: 20,
                 style: TextStyle(color: Colors.grey[900]),
-                validator: (value) => value == null ? '!!!' : null,
-                onChanged: (int newValue) {
+                validator: (value) =>
+                    value == null ? 'Select number of semesters' : null,
+                onChanged: (int semesterValue) {
                   setState(() {
-                    _selection[i] = newValue;
-                    property = List<int>()..length = (_selection[i] + 1);
-                    property[0] = _selection[i];
-                    _aproperty[i] = property;
+                    // _selection[level] = semesterValue;
+                    levels[level].numberofSemesters = semesterValue;
+
+                    // property = List<int>()..length = (_selection[level] + 1);
+                    // property[0] = _selection[level];
+                    // _aproperty[level] = property;
                   });
-                  _alevel[i] =
-                      Level(name: '${i + 1}00', property: _aproperty[i]);
+                  // levels[level] = Level(
+                  //     name: '${level + 1}00', property: _aproperty[level]);
                 },
                 items: <int>[
                   1,
@@ -86,20 +93,19 @@ class _Selection2State extends State<Selection2> {
         shrinkWrap: true,
         children: <Widget>[
           SizedBox(height: 10),
-          Center(
-              child: Text('Select the number of semester per level',
-                  style: TextStyle(color: Colors.blueAccent))),
+          Text('Select the number of semester per level',
+              style: TextStyle(color: primaryColor)),
           SizedBox(height: 10),
           Form(
             key: _formkey,
             child: Column(
-              children: textFields,
+              children: levelDropDownFieldList,
             ),
           ),
           SizedBox(height: 10),
           Center(
             child: Container(
-              color: Colors.blueAccent[700],
+              color: primaryColor[700],
               child: FlatButton.icon(
                 onPressed: () {
                   if (_formkey.currentState.validate()) {
@@ -107,14 +113,12 @@ class _Selection2State extends State<Selection2> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => Selection3(
-                          n: n,
-                          data: {
-                            'pointbase': widget.data['pointbase'],
-                            'passmark': widget.data['passmark'],
-                            'level': widget.data['level'],
-                            'name': widget.data['name'],
-                            'levels': _alevel,
-                          },
+                          user: User(
+                              currentlevelNumber:
+                                  widget.user.currentlevelNumber,
+                              name: widget.user.name,
+                              school: widget.user.school,
+                              levels: levels),
                         ),
                       ),
                     );

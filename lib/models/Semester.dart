@@ -4,5 +4,6 @@ class Semester {
   String name;
   String levelName;
   List<Course> courses;
-  Semester({this.courses, this.levelName, this.name});
+  int numberofCourse;
+  Semester({this.courses, this.levelName, this.name, this.numberofCourse});
 }
