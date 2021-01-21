@@ -1,4 +1,4 @@
-import 'package:cgpa_calculator/models/Courses.dart';
+import 'package:cgpa_calculator/models/Course.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 

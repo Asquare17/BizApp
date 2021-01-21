@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
+class Welcome extends StatefulWidget {
   @override
-  _HomeState createState() => _HomeState();
+  _WelcomeState createState() => _WelcomeState();
 }
 
-class _HomeState extends State<Home> {
+class _WelcomeState extends State<Welcome> {
   @override
   Widget build(BuildContext context) {
+    MaterialAccentColor primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
       body: Center(
         child: ListView(
@@ -46,7 +47,7 @@ class _HomeState extends State<Home> {
                           onPressed: () => {},
                           minWidth: 150.0,
                           height: 50.0,
-                          color: Colors.blueAccent[700],
+                          color: primaryColor[700],
                           child: Text(
                             "LOGIN",
                             style: TextStyle(
@@ -62,20 +63,22 @@ class _HomeState extends State<Home> {
               ),
             ),
             SizedBox(
-              height: 25.0,
+              height: 50.0,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Expanded(child: Text("Don't Have a Account?")),
-                Text("Sign Up",
+                Text("Don't Have a Account? "),
+                Text("  Sign Up",
                     style: TextStyle(
-                      color: Colors.blueAccent,
+                      color: primaryColor,
                     )),
               ],
             ),
           ],
         ),
       ),
+      //GUEST LOGIN
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(10.0),
         child: Row(
@@ -92,12 +95,12 @@ class _HomeState extends State<Home> {
                       borderRadius: BorderRadius.circular(
                         15.0,
                       ),
-                      side: BorderSide(color: Color(0xFF179CDF))),
+                      side: BorderSide(color: primaryColor[200])),
                   child: Text(
                     "SKIP SIGN UP FOR NOW",
                     style: TextStyle(
                       fontSize: 18.0,
-                      color: Colors.blueAccent[700],
+                      color: primaryColor[700],
                     ),
                   )),
             )

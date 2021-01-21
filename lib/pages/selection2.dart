@@ -1,4 +1,4 @@
-import 'package:cgpa_calculator/models/Levels.dart';
+import 'package:cgpa_calculator/models/Level.dart';
 import 'package:cgpa_calculator/pages/selection3.dart';
 import 'package:flutter/material.dart';
 

@@ -5,6 +5,7 @@ class Course {
   int grade;
   double passmark;
   double pointbase;
+
   Course(
       {this.name,
       this.pointbase,
@@ -12,6 +13,7 @@ class Course {
       this.weight,
       this.passmark,
       this.grade});
+
   calcgrade() {
     if (pointbase == 5.0) {
       if (score < passmark) {
