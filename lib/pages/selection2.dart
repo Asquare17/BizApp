@@ -1,11 +1,13 @@
 import 'package:cgpa_calculator/models/Level.dart';
+import 'package:cgpa_calculator/models/User.dart';
 import 'package:cgpa_calculator/pages/selection3.dart';
 import 'package:flutter/material.dart';
 
 class Selection2 extends StatefulWidget {
   final int n;
   final Map data;
-  Selection2({this.n, this.data});
+  final User user;
+  Selection2({this.n, this.data, this.user});
   @override
   _Selection2State createState() => _Selection2State();
 }

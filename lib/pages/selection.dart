@@ -1,3 +1,6 @@
+import 'package:cgpa_calculator/models/Level.dart';
+import 'package:cgpa_calculator/models/School.dart';
+import 'package:cgpa_calculator/models/User.dart';
 import 'package:cgpa_calculator/pages/selection2.dart';
 import 'package:flutter/material.dart';
 
@@ -11,62 +14,51 @@ class _SelectionState extends State<Selection> {
   double passmark = 40;
   int level = 100;
 
-  final nameController = TextEditingController();
+  final guestNameController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   @override
   void dispose() {
-    nameController.dispose();
+    guestNameController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    MaterialAccentColor primaryColor = Theme.of(context).primaryColor;
     return Scaffold(
         appBar: AppBar(
           title: Text('CGPA Calculator'),
           centerTitle: true,
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: primaryColor,
         ),
         body: Center(
           child: ListView(
             shrinkWrap: true,
             children: <Widget>[
               Card(
-                child: Row(
-                  children: <Widget>[
-                    Text('Name:'),
-                    SizedBox(
-                      width: 10,
+                child: Form(
+                  key: _formkey,
+                  child: TextFormField(
+                    controller: guestNameController,
+                    validator: (val) {
+                      if (val.isEmpty) {
+                        return 'Enter your name!!';
+                      } else
+                        return null;
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Enter your name',
                     ),
-                    Container(
-                      width: 200,
-                      child: Form(
-                        key: _formkey,
-                        child: TextFormField(
-                          controller: nameController,
-                          validator: (val) {
-                            if (val.isEmpty) {
-                              return 'Enter your name!!';
-                            } else
-                              return null;
-                          },
-                          decoration: InputDecoration.collapsed(
-                            hintText: 'Enter your name',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
-              Center(
-                  child: Text(
+              Text(
                 'Select the option that fits your school',
-                style: TextStyle(color: Colors.blueAccent),
-              )),
+                style: TextStyle(color: primaryColor, fontSize: 20),
+              ),
               SizedBox(height: 10),
               Card(
                 child: Row(
@@ -190,8 +182,16 @@ class _SelectionState extends State<Selection> {
                                 'pointbase': pointbase,
                                 'passmark': passmark,
                                 'level': level,
-                                'name': nameController.text,
+                                'name': guestNameController.text,
                               },
+                              user: User(
+                                name: guestNameController.text,
+                                school: School(
+                                  pointbase: pointbase,
+                                  passmark: passmark,
+                                ),
+                                levelNumber: (level * 0.01).toInt(),
+                              ),
                             ),
                           ),
                         );
