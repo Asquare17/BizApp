@@ -37,133 +37,154 @@ class _SelectionState extends State<Selection> {
             shrinkWrap: true,
             children: <Widget>[
               Card(
-                child: Form(
-                  key: _formkey,
-                  child: TextFormField(
-                    controller: guestNameController,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    validator: (val) {
-                      if (val.isEmpty) {
-                        return 'Name cannot be empty';
-                      } else
-                        return null;
-                    },
-                    decoration: InputDecoration(
-                      hintText: 'Enter your name',
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                  child: Form(
+                    key: _formkey,
+                    child: TextFormField(
+                      controller: guestNameController,
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (val) {
+                        if (val.isEmpty) {
+                          return 'Name cannot be empty';
+                        } else
+                          return null;
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Enter your name',
+                      ),
                     ),
+                  ),
+                ),
+              ),
+              Text(
+                'Select the option that fits your school',
+                style: TextStyle(color: primaryColor, fontSize: 20),
+              ),
+              Card(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Grading System:',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      DropdownButton<double>(
+                        value: pointbase,
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 20,
+                        style: TextStyle(color: Colors.grey[900]),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.grey,
+                        ),
+                        onChanged: (double newValue) {
+                          setState(() {
+                            pointbase = newValue;
+                          });
+                        },
+                        items: <double>[
+                          5.0,
+                          4.0,
+                        ].map<DropdownMenuItem<double>>((double value) {
+                          return DropdownMenuItem<double>(
+                            value: value,
+                            child: Text(value.toString()),
+                          );
+                        }).toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Card(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'PassMark:',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      DropdownButton<double>(
+                        value: passmark,
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 20,
+                        style: TextStyle(color: Colors.grey[900]),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.grey,
+                        ),
+                        onChanged: (double newValue) {
+                          setState(() {
+                            passmark = newValue;
+                          });
+                        },
+                        items: <double>[
+                          40,
+                          45,
+                        ].map<DropdownMenuItem<double>>((double value) {
+                          return DropdownMenuItem<double>(
+                            value: value,
+                            child: Text(value.toString()),
+                          );
+                        }).toList(),
+                      ),
+                    ],
                   ),
                 ),
               ),
               SizedBox(
                 height: 10,
               ),
-              Text(
-                'Select the option that fits your school',
-                style: TextStyle(color: primaryColor, fontSize: 20),
-              ),
-              SizedBox(height: 10),
               Card(
-                child: Row(
-                  children: <Widget>[
-                    Text('Grading System:'),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    DropdownButton<double>(
-                      value: pointbase,
-                      icon: Icon(Icons.arrow_drop_down),
-                      iconSize: 20,
-                      style: TextStyle(color: Colors.grey[900]),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.grey,
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      Text(
+                        'Level:',
+                        style: TextStyle(fontSize: 18),
                       ),
-                      onChanged: (double newValue) {
-                        setState(() {
-                          pointbase = newValue;
-                        });
-                      },
-                      items: <double>[
-                        5.0,
-                        4.0,
-                      ].map<DropdownMenuItem<double>>((double value) {
-                        return DropdownMenuItem<double>(
-                          value: value,
-                          child: Text(value.toString()),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 10),
-              Card(
-                child: Row(
-                  children: <Widget>[
-                    Text('PassMark:'),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    DropdownButton<double>(
-                      value: passmark,
-                      icon: Icon(Icons.arrow_drop_down),
-                      iconSize: 20,
-                      style: TextStyle(color: Colors.grey[900]),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.grey,
+                      SizedBox(
+                        width: 10,
                       ),
-                      onChanged: (double newValue) {
-                        setState(() {
-                          passmark = newValue;
-                        });
-                      },
-                      items: <double>[
-                        40,
-                        45,
-                      ].map<DropdownMenuItem<double>>((double value) {
-                        return DropdownMenuItem<double>(
-                          value: value,
-                          child: Text(value.toString()),
-                        );
-                      }).toList(),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Card(
-                child: Row(
-                  children: <Widget>[
-                    Text('Level:'),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    DropdownButton<int>(
-                      value: level,
-                      icon: Icon(Icons.arrow_drop_down),
-                      iconSize: 20,
-                      style: TextStyle(color: Colors.grey[900]),
-                      underline: Container(
-                        height: 2,
-                        color: Colors.grey,
+                      DropdownButton<int>(
+                        value: level,
+                        icon: Icon(Icons.arrow_drop_down),
+                        iconSize: 20,
+                        style: TextStyle(color: Colors.grey[900]),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.grey,
+                        ),
+                        onChanged: (int newValue) {
+                          setState(() {
+                            level = newValue;
+                          });
+                        },
+                        items: <int>[100, 200, 300, 400, 500, 600]
+                            .map<DropdownMenuItem<int>>((int value) {
+                          return DropdownMenuItem<int>(
+                            value: value,
+                            child: Text(value.toString()),
+                          );
+                        }).toList(),
                       ),
-                      onChanged: (int newValue) {
-                        setState(() {
-                          level = newValue;
-                        });
-                      },
-                      items: <int>[100, 200, 300, 400, 500, 600]
-                          .map<DropdownMenuItem<int>>((int value) {
-                        return DropdownMenuItem<int>(
-                          value: value,
-                          child: Text(value.toString()),
-                        );
-                      }).toList(),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
@@ -171,7 +192,7 @@ class _SelectionState extends State<Selection> {
               ),
               Center(
                 child: Container(
-                  color: Colors.blueAccent[700],
+                  color: primaryColor[700],
                   child: FlatButton.icon(
                     onPressed: () {
                       if (_formkey.currentState.validate()) {

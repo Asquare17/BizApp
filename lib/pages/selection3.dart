@@ -1,7 +1,6 @@
 import 'package:cgpa_calculator/models/Level.dart';
 import 'package:cgpa_calculator/models/Semester.dart';
 import 'package:cgpa_calculator/models/User.dart';
-import 'package:cgpa_calculator/pages/inputdata.dart';
 import 'package:cgpa_calculator/pages/selection4.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -143,14 +142,12 @@ class _Selection3State extends State<Selection3> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => Selection4(
-                          n: widget.n,
-                          data: {
-                            'pointbase': widget.data['pointbase'],
-                            'passmark': widget.data['passmark'],
-                            'level': widget.data['level'],
-                            'name': widget.data['name'],
-                            'levels': _alevel, //widget.data['levels'],
-                          },
+                          user: User(
+                              currentlevelNumber:
+                                  widget.user.currentlevelNumber,
+                              name: widget.user.name,
+                              school: widget.user.school,
+                              levels: levels),
                         ),
                       ),
                     );

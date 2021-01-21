@@ -1,12 +1,13 @@
 import 'package:cgpa_calculator/models/Course.dart';
+import 'package:cgpa_calculator/models/Level.dart';
+import 'package:cgpa_calculator/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class TableTextField extends StatefulWidget {
-  final int n;
-  final int i;
-  final Map data;
-  TableTextField({this.n, this.i, this.data});
+  final User user;
+  final int level;
+  TableTextField({this.user, this.level});
   @override
   _TableTextFieldState createState() => _TableTextFieldState();
 }
@@ -17,58 +18,61 @@ class _TableTextFieldState extends State<TableTextField> {
   var _aweight;
   var _aname;
   var _acourse;
-  var _alevel;
+  List<Level> levels;
   var textFields2;
-  var textFields3;
+  List<Widget> courseFieldperSemester;
   var list;
-  var list2;
-  var list3;
+  List<int> semesterSequenceList;
+  List<int> courseSequenceList;
   @override
   void initState() {
     super.initState();
-    textFields2 = List<Widget>()..length = widget.n;
-    textFields3 = List<List<Widget>>()..length = widget.n; //not sure
-    _alevel = widget.data['levels'];
-    _ascore = List<List<double>>()..length = widget.n;
-    _aname = List<List<String>>()..length = widget.n;
-    _aweight = List<List<int>>()..length = widget.n;
-    _acourse = List<List<Course>>()..length = widget.n;
+    courseFieldperSemester = List<Widget>();
+    textFields2 = List<Widget>()
+      ..length = widget.user.currentlevelNumber; //not sure
+    levels = widget.user.levels;
+    _ascore = List<List<double>>()..length = widget.user.currentlevelNumber;
+    _aname = List<List<String>>()..length = widget.user.currentlevelNumber;
+    _aweight = List<List<int>>()..length = widget.user.currentlevelNumber;
+    _acourse = List<List<Course>>()..length = widget.user.currentlevelNumber;
   }
 
   @override
   Widget build(BuildContext context) {
-    int b = _alevel[widget.i].property[0];
-    textFields3 = List<List<Widget>>()..length = b;
-    _ascore = List<List<double>>()..length = b;
-    _acourse = List<List<Course>>()..length = b;
-    _aweight = List<List<int>>()..length = b;
-    _aname = List<List<String>>()..length = b;
-    list2 = List<int>.generate(b, (j) => j);
+    int numberofsemester = levels[widget.level].numberofSemesters;
+    _ascore = List<List<double>>()..length = numberofsemester;
+    _acourse = List<List<Course>>()..length = numberofsemester;
+    _aweight = List<List<int>>()..length = numberofsemester;
+    _aname = List<List<String>>()..length = numberofsemester;
+    semesterSequenceList =
+        List<int>.generate(numberofsemester, (semester) => semester);
     textFields2 = <Widget>[];
 
-    for (int j in list2) {
-      int c = _alevel[widget.i].property[j + 1];
-      _aname[j] = List<String>()..length = c;
-      _aweight[j] = List<int>()..length = c;
-      _ascore[j] = List<double>()..length = c;
-      _acourse[j] = List<Course>()..length = c;
+    for (int semester in semesterSequenceList) {
+      int numberofcourse =
+          levels[widget.level].semesters[semester].numberofCourse;
+      _aname[semester] = List<String>()..length = numberofcourse;
+      _aweight[semester] = List<int>()..length = numberofcourse;
+      _ascore[semester] = List<double>()..length = numberofcourse;
+      _acourse[semester] = List<Course>()..length = numberofcourse;
 
-      list3 = List<int>.generate(c, (j) => j);
-      textFields3[j] = <Widget>[];
+      courseSequenceList =
+          List<int>.generate(numberofcourse, (course) => course);
+
       textFields2.add(Column(
         children: <Widget>[
           Text(
-            'Semester ${j + 1}:',
+            'Semester ${(semester + 1).toString()}:',
             style: TextStyle(
               color: Colors.blue,
             ),
           ),
           Column(
-            children: textFields3[j],
+            children: courseFieldperSemester,
           ),
         ],
       ));
-      textFields3[j].add(Table(
+      courseFieldperSemester.add(Table(
           border: TableBorder.all(width: 1, color: Colors.grey),
           children: [
             TableRow(children: [
@@ -78,12 +82,12 @@ class _TableTextFieldState extends State<TableTextField> {
               Text('Score'),
             ]),
           ]));
-      for (int k in list3) {
-        textFields3[j].add(Table(
+      for (int course in courseSequenceList) {
+        courseFieldperSemester.add(Table(
             border: TableBorder.all(width: 1, color: Colors.grey),
             children: [
               TableRow(children: [
-                Text((k + 1).toString()),
+                Text((course + 1).toString()),
                 TextFormField(
                   validator: (val) {
                     if (val.isEmpty) {
@@ -93,7 +97,10 @@ class _TableTextFieldState extends State<TableTextField> {
                     }
                   },
                   onChanged: (val) {
-                    _aname[j][k] = val;
+                    levels[widget.level]
+                        .semesters[semester]
+                        .courses[course]
+                        .name = val;
                     changed = false;
                   },
                 ),
@@ -102,6 +109,7 @@ class _TableTextFieldState extends State<TableTextField> {
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(new RegExp('[\\-|\\ ]'))
                   ],
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   validator: (val) {
                     if (val.isEmpty) {
                       return 'Enter the course\'s unit';
@@ -114,7 +122,10 @@ class _TableTextFieldState extends State<TableTextField> {
                     }
                   },
                   onChanged: (val) {
-                    _aweight[j][k] = int.parse(val);
+                    levels[widget.level]
+                        .semesters[semester]
+                        .courses[course]
+                        .weight = int.parse(val);
                     changed = false;
                   },
                 ),
@@ -137,7 +148,10 @@ class _TableTextFieldState extends State<TableTextField> {
                     }
                   },
                   onChanged: (val) {
-                    _ascore[j][k] = double.parse(val);
+                    levels[widget.level]
+                        .semesters[semester]
+                        .courses[course]
+                        .score = double.parse(val);
                     changed = false;
                   },
                 ),

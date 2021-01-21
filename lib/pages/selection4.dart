@@ -1,13 +1,12 @@
 import 'package:cgpa_calculator/components/TableTextField.dart';
 import 'package:cgpa_calculator/models/Course.dart';
 import 'package:cgpa_calculator/models/Level.dart';
+import 'package:cgpa_calculator/models/User.dart';
 import 'package:flutter/material.dart';
 
 class Selection4 extends StatefulWidget {
-  final int n;
-  final Map data;
-  final User
-  Selection4({this.n, this.data});
+  final User user;
+  Selection4({this.user});
   @override
   _Selection4State createState() => _Selection4State();
 }
@@ -21,9 +20,9 @@ class _Selection4State extends State<Selection4>
   int currentIndex = 0;
   static double passmark;
   static double pointbase;
-  var list;
-  var list2;
-  var list3;
+  var levelSequenceList;
+  var semesterSequenceList;
+  var courseSequenceList;
   var _ascore;
   var _aweight;
   var _aname;
@@ -33,16 +32,19 @@ class _Selection4State extends State<Selection4>
   void initState() {
     // TODO: implement initState
     super.initState();
-    //TODO list = List<int>.generate(widget.n, (i) => i);
     levels = widget.user.levels;
-    list = List<int>.generate(widget.n, (i) => i);
-    _ascore = List<List<List<double>>>()..length = widget.n;
-    _aname = List<List<List<String>>>()..length = widget.n;
-    _aweight = List<List<List<int>>>()..length = widget.n;
-    _acourse = List<List<List<Course>>>()..length = widget.n;
+    levelSequenceList =
+        List<int>.generate(widget.user.currentlevelNumber, (level) => level);
+    _ascore = List<List<List<double>>>()
+      ..length = widget.user.currentlevelNumber;
+    _aname = List<List<List<String>>>()
+      ..length = widget.user.currentlevelNumber;
+    _aweight = List<List<List<int>>>()..length = widget.user.currentlevelNumber;
+    _acourse = List<List<List<Course>>>()
+      ..length = widget.user.currentlevelNumber;
 
     _scrollController = ScrollController();
-    _tabController = TabController(length: _alevel.length, vsync: this);
+    _tabController = TabController(length: levels.length, vsync: this);
     _tabController.addListener(_smoothScrollToTop);
   }
 
@@ -117,8 +119,8 @@ class _Selection4State extends State<Selection4>
     int totalweightscore = 0;
     int totalweight = 0;
 
-    passmark = widget.data['passmark'];
-    pointbase = widget.data['pointbase'];
+    passmark = widget.user.school.passmark;
+    pointbase = widget.user.school.pointbase;
     return Scaffold(
       appBar: AppBar(
         title: Text('Input your scores'),
@@ -150,8 +152,8 @@ class _Selection4State extends State<Selection4>
                     unselectedLabelColor: Colors.black54,
                     unselectedLabelStyle:
                         TextStyle(fontSize: 18, fontWeight: FontWeight.normal),
-                    tabs: List.generate(_alevel.length,
-                        (index) => Text('${_alevel[index].name} LEVEL')),
+                    tabs: List.generate(levels.length,
+                        (index) => Text('${levels[index].name}')),
                   ),
                 ),
               ),
@@ -161,11 +163,10 @@ class _Selection4State extends State<Selection4>
             child: TabBarView(
                 controller: _tabController,
                 children: List.generate(
-                    _alevel.length,
+                    levels.length,
                     (index) => TableTextField(
-                          data: widget.data,
-                          i: index,
-                          n: widget.n,
+                          user: widget.user,
+                          level: index,
                         ))),
           ),
         ),
@@ -177,21 +178,24 @@ class _Selection4State extends State<Selection4>
         ),
         onPressed: () async {
           if (_formkey.currentState.validate()) {
-            for (int i in list) {
-              int b = _alevel[i].property[0];
-              list2 = List<int>.generate(b, (j) => j);
-              for (int j in list2) {
-                int c = _alevel[i].property[j + 1];
-                list3 = List<int>.generate(c, (j) => j);
-                for (int k in list3) {
-                  _acourse[i][j][k] = Course(
-                    name: _aname[i][j][k],
-                    score: _ascore[i][j][k],
-                    weight: _aweight[i][j][k],
+            for (int level in levelSequenceList) {
+              int numberofSemesterperLevel = levels[level].numberofSemesters;
+              semesterSequenceList = List<int>.generate(
+                  numberofSemesterperLevel, (semester) => semester);
+              for (int semester in semesterSequenceList) {
+                int numberofCoursepersemester =
+                    levels[level].semesters[semester].numberofCourse;
+                courseSequenceList = List<int>.generate(
+                    numberofCoursepersemester, (course) => course);
+                for (int course in courseSequenceList) {
+                  _acourse[level][semester][course] = Course(
+                    name: _aname[level][semester][course],
+                    score: _ascore[level][semester][course],
+                    weight: _aweight[level][semester][course],
                     passmark: passmark,
                     pointbase: pointbase,
                   );
-                  Course a = _acourse[i][j][k];
+                  Course a = _acourse[level][semester][course];
                   a.calcgrade();
                   weightscore = a.grade * a.weight;
                   totalweight = totalweight + a.weight;
@@ -206,7 +210,7 @@ class _Selection4State extends State<Selection4>
             cgpa = 0;
             cgpaDialog(
               context: context,
-              name: widget.data['name'],
+              name: widget.user.name,
               cgpa: newcgpa,
             );
           }

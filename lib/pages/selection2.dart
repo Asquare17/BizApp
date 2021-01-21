@@ -1,4 +1,5 @@
 import 'package:cgpa_calculator/models/Level.dart';
+import 'package:cgpa_calculator/models/Semester.dart';
 import 'package:cgpa_calculator/models/User.dart';
 import 'package:cgpa_calculator/pages/selection3.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,10 @@ class Selection2 extends StatefulWidget {
 }
 
 class _Selection2State extends State<Selection2> {
-  var levelSequenceList;
+  List<int> levelSequenceList;
   List<Level> levels;
   int numberofLevels;
-  // List<int> _selection;
+  List<int> _semesterselection;
   // List<int> property;
   // List<List<int>> _aproperty;
   final _formkey = GlobalKey<FormState>();
@@ -22,7 +23,8 @@ class _Selection2State extends State<Selection2> {
   @override
   void initState() {
     super.initState();
-    // _selection = new List<int>()..length = widget.n;
+    _semesterselection = new List<int>()
+      ..length = widget.user.currentlevelNumber;
     levelSequenceList =
         List<int>.generate(widget.user.currentlevelNumber, (level) => level);
     levels = widget.user.levels;
@@ -38,19 +40,17 @@ class _Selection2State extends State<Selection2> {
 
     var levelDropDownFieldList = <Widget>[];
     levelSequenceList.forEach((level) {
-      levels[level] = Level();
-      levels[level].name = '${level + 1}00 Level';
       levelDropDownFieldList.add(Card(
         child: Row(
           children: <Widget>[
-            Text('${levels[level].name} :'),
+            Text('${level + 1}00 Level :'),
             SizedBox(
               width: 10,
             ),
             Container(
               width: 50,
               child: DropdownButtonFormField<int>(
-                value: levels[level].numberofSemesters,
+                value: _semesterselection[level],
                 icon: Icon(Icons.arrow_drop_down),
                 iconSize: 20,
                 style: TextStyle(color: Colors.grey[900]),
@@ -58,15 +58,19 @@ class _Selection2State extends State<Selection2> {
                     value == null ? 'Select number of semesters' : null,
                 onChanged: (int semesterValue) {
                   setState(() {
-                    // _selection[level] = semesterValue;
-                    levels[level].numberofSemesters = semesterValue;
+                    _semesterselection[level] = semesterValue;
 
                     // property = List<int>()..length = (_selection[level] + 1);
                     // property[0] = _selection[level];
                     // _aproperty[level] = property;
                   });
-                  // levels[level] = Level(
-                  //     name: '${level + 1}00', property: _aproperty[level]);
+                  levels[level] = Level(
+                    name: '${level + 1}00 Level',
+                    numberofSemesters: _semesterselection[level],
+                    currentLevelNumber: widget.user.currentlevelNumber,
+                    semesters: List<Semester>()
+                      ..length = _semesterselection[level],
+                  );
                 },
                 items: <int>[
                   1,
@@ -109,6 +113,10 @@ class _Selection2State extends State<Selection2> {
               child: FlatButton.icon(
                 onPressed: () {
                   if (_formkey.currentState.validate()) {
+                    for (Level ele in levels) {
+                      print(ele.numberofSemesters);
+                      print('lol');
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
