@@ -18,19 +18,22 @@ class _TableTextFieldState extends State<TableTextField> {
   var _aweight;
   var _aname;
   var _acourse;
+
   List<Level> levels;
-  var textFields2;
-  List<Widget> courseFieldperSemester;
+  List<List<Widget>> courseFieldperSemester;
   var list;
   List<int> semesterSequenceList;
   List<int> courseSequenceList;
+  int numberofsemester;
   @override
   void initState() {
     super.initState();
-    courseFieldperSemester = List<Widget>();
-    textFields2 = List<Widget>()
-      ..length = widget.user.currentlevelNumber; //not sure
     levels = widget.user.levels;
+    numberofsemester = levels[widget.level].numberofSemesters;
+    courseFieldperSemester = List<List<Widget>>()..length = numberofsemester;
+    // semesterFieldperLevel = List<Widget>()
+    //   ..length = numberofsemester; //not sure
+
     _ascore = List<List<double>>()..length = widget.user.currentlevelNumber;
     _aname = List<List<String>>()..length = widget.user.currentlevelNumber;
     _aweight = List<List<int>>()..length = widget.user.currentlevelNumber;
@@ -39,15 +42,15 @@ class _TableTextFieldState extends State<TableTextField> {
 
   @override
   Widget build(BuildContext context) {
-    int numberofsemester = levels[widget.level].numberofSemesters;
     _ascore = List<List<double>>()..length = numberofsemester;
     _acourse = List<List<Course>>()..length = numberofsemester;
     _aweight = List<List<int>>()..length = numberofsemester;
     _aname = List<List<String>>()..length = numberofsemester;
+
+    List<Widget> semesterFieldperLevel = <Widget>[];
+
     semesterSequenceList =
         List<int>.generate(numberofsemester, (semester) => semester);
-    textFields2 = <Widget>[];
-
     for (int semester in semesterSequenceList) {
       int numberofcourse =
           levels[widget.level].semesters[semester].numberofCourse;
@@ -58,8 +61,8 @@ class _TableTextFieldState extends State<TableTextField> {
 
       courseSequenceList =
           List<int>.generate(numberofcourse, (course) => course);
-
-      textFields2.add(Column(
+      courseFieldperSemester[semester] = <Widget>[];
+      semesterFieldperLevel.add(Column(
         children: <Widget>[
           Text(
             'Semester ${(semester + 1).toString()}:',
@@ -68,11 +71,11 @@ class _TableTextFieldState extends State<TableTextField> {
             ),
           ),
           Column(
-            children: courseFieldperSemester,
+            children: courseFieldperSemester[semester],
           ),
         ],
       ));
-      courseFieldperSemester.add(Table(
+      courseFieldperSemester[semester].add(Table(
           border: TableBorder.all(width: 1, color: Colors.grey),
           children: [
             TableRow(children: [
@@ -83,7 +86,7 @@ class _TableTextFieldState extends State<TableTextField> {
             ]),
           ]));
       for (int course in courseSequenceList) {
-        courseFieldperSemester.add(Table(
+        courseFieldperSemester[semester].add(Table(
             border: TableBorder.all(width: 1, color: Colors.grey),
             children: [
               TableRow(children: [
@@ -170,7 +173,7 @@ class _TableTextFieldState extends State<TableTextField> {
     return ListView(
       children: <Widget>[
         Column(
-          children: textFields2,
+          children: semesterFieldperLevel,
         ),
       ],
     );

@@ -16,9 +16,9 @@ class _Selection2State extends State<Selection2> {
   List<Level> levels;
   int numberofLevels;
   List<int> _semesterselection;
+  final _formkey = GlobalKey<FormState>();
   // List<int> property;
   // List<List<int>> _aproperty;
-  final _formkey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -113,10 +113,6 @@ class _Selection2State extends State<Selection2> {
               child: FlatButton.icon(
                 onPressed: () {
                   if (_formkey.currentState.validate()) {
-                    for (Level ele in levels) {
-                      print(ele.numberofSemesters);
-                      print('lol');
-                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(

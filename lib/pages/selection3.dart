@@ -1,3 +1,4 @@
+import 'package:cgpa_calculator/models/Course.dart';
 import 'package:cgpa_calculator/models/Level.dart';
 import 'package:cgpa_calculator/models/Semester.dart';
 import 'package:cgpa_calculator/models/User.dart';
@@ -7,43 +8,44 @@ import 'package:flutter/services.dart';
 
 class Selection3 extends StatefulWidget {
   final User user;
-  final Map data;
-  Selection3({this.data, this.user});
+
+  Selection3({this.user});
   @override
   _Selection3State createState() => _Selection3State();
 }
 
 class _Selection3State extends State<Selection3> {
   final _formkey = GlobalKey<FormState>();
-  var levelSequenceList;
-  var semesterSequenceList;
+  List<int> levelSequenceList;
   List<Level> levels;
+  List<int> semesterSequenceList;
+  List<List<int>> _semesterselection;
 
-  List<int> property;
-
-  var levelDropDownFieldList;
+  List<List<Widget>> semesterDropDownFieldList;
 
   @override
   void initState() {
     super.initState();
+    _semesterselection = new List<List<int>>()
+      ..length = widget.user.currentlevelNumber;
     levelSequenceList =
         List<int>.generate(widget.user.currentlevelNumber, (level) => level);
     levels = widget.user.levels;
-    levelDropDownFieldList = List<List<Widget>>()
+    semesterDropDownFieldList = List<List<Widget>>()
       ..length = widget.user.currentlevelNumber;
   }
 
   @override
   Widget build(BuildContext context) {
     MaterialAccentColor primaryColor = Theme.of(context).primaryColor;
-    var semesterDropDownFieldList = <Widget>[];
+    List<Widget> levelDropDownFieldList = <Widget>[];
 
     levelSequenceList.forEach((level) {
       int numberofSemesterperLevel = levels[level].numberofSemesters;
       semesterSequenceList =
           List<int>.generate(numberofSemesterperLevel, (semester) => semester);
-      levelDropDownFieldList[level] = <Widget>[];
-      semesterDropDownFieldList.add(Card(
+      semesterDropDownFieldList[level] = <Widget>[];
+      levelDropDownFieldList.add(Card(
         child: Row(
           children: <Widget>[
             Text(
@@ -57,16 +59,16 @@ class _Selection3State extends State<Selection3> {
               width: 10,
             ),
             Column(
-              children: levelDropDownFieldList[level],
+              children: semesterDropDownFieldList[level],
             ),
           ],
         ),
       ));
 
       for (int semester in semesterSequenceList) {
-        levels[level].semesters[semester] = Semester();
-        levels[level].semesters[semester].name = "Semester ${semester + 1}";
-        levelDropDownFieldList[level].add(Column(
+        _semesterselection[level] = List<int>()
+          ..length = numberofSemesterperLevel;
+        semesterDropDownFieldList[level].add(Column(
           children: <Widget>[
             SizedBox(
               height: 3,
@@ -75,7 +77,7 @@ class _Selection3State extends State<Selection3> {
               width: 100,
               child: TextFormField(
                 decoration: InputDecoration.collapsed(
-                  hintText: levels[level].semesters[semester].name,
+                  hintText: "Semester ${semester + 1}",
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),
@@ -97,9 +99,15 @@ class _Selection3State extends State<Selection3> {
                   }
                 },
                 onChanged: (val) {
-                  setState(() => levels[level]
-                      .semesters[semester]
-                      .numberofCourse = int.parse(val));
+                  setState(() =>
+                      _semesterselection[level][semester] = int.parse(val));
+                  levels[level].semesters[semester] = Semester(
+                    name: "Semester ${semester + 1}",
+                    levelName: levels[level].name,
+                    numberofCourse: _semesterselection[level][semester],
+                    courses: List<Course>()
+                      ..length = _semesterselection[level][semester],
+                  );
                 },
               ),
             ),
@@ -128,7 +136,7 @@ class _Selection3State extends State<Selection3> {
           Form(
             key: _formkey,
             child: Column(
-              children: semesterDropDownFieldList,
+              children: levelDropDownFieldList,
             ),
           ),
           SizedBox(height: 10),
@@ -138,6 +146,13 @@ class _Selection3State extends State<Selection3> {
               child: FlatButton.icon(
                 onPressed: () {
                   if (_formkey.currentState.validate()) {
+                    print(_semesterselection);
+                    for (Level ele in levels) {
+                      for (Semester sem in ele.semesters) {
+                        print(sem.numberofCourse);
+                        print('lol' * 1000);
+                      }
+                    }
                     Navigator.push(
                       context,
                       MaterialPageRoute(
