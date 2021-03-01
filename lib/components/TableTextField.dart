@@ -40,6 +40,9 @@ class _TableTextFieldState extends State<TableTextField> {
     _acourse = List<List<Course>>()..length = widget.user.currentlevelNumber;
   }
 
+  TextEditingController textEditingController = TextEditingController();
+  TextEditingController scoreEditingController = TextEditingController();
+  TextEditingController unitEditingController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     _ascore = List<List<double>>()..length = numberofsemester;
@@ -92,6 +95,7 @@ class _TableTextFieldState extends State<TableTextField> {
               TableRow(children: [
                 Text((course + 1).toString()),
                 TextFormField(
+                  controller: textEditingController,
                   validator: (val) {
                     if (val.isEmpty) {
                       return 'Please Enter course code';
@@ -108,6 +112,7 @@ class _TableTextFieldState extends State<TableTextField> {
                   },
                 ),
                 TextFormField(
+                  controller: unitEditingController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(new RegExp('[\\-|\\ ]'))
@@ -133,6 +138,7 @@ class _TableTextFieldState extends State<TableTextField> {
                   },
                 ),
                 TextFormField(
+                  controller: scoreEditingController,
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   inputFormatters: [
                     FilteringTextInputFormatter.deny(new RegExp('[\\-|\\ ]'))
